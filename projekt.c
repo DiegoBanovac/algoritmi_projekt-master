@@ -32,22 +32,30 @@ CelijaNogometniKlub* pronadjiZadnju(CelijaNogometniKlub* ppolaznaCelija) {
 // Unos kluba
 void unosKlub(CelijaNogometniKlub* ppolaznaCelija) {
     Nogometni_klub noviKlub;
-
+    
+    char c;
+    
+    while ((c = getchar()) != '\n');
     printf("\n Unesite ime kluba: ");
     scanf_s("%49s", noviKlub.ime, (unsigned)_countof(noviKlub.ime));
-
+    
+    while ((c = getchar()) != '\n');
     printf("\n Unesite ligu kluba: ");
     scanf_s("%49s", noviKlub.liga, (unsigned)_countof(noviKlub.liga));
-
+   
+    while ((c = getchar()) != '\n');
     printf("\n Unesite stadion kluba: ");
     scanf_s("%49s", noviKlub.stadion, (unsigned)_countof(noviKlub.stadion));
-
+    
+    while ((c = getchar()) != '\n');
     printf("\n Unesite kapacitet stadiona kluba: ");
     scanf_s("%d", &noviKlub.kapacitet);
-
+    
+    while ((c = getchar()) != '\n');
     printf("\n Unesite godinu osnivanja kluba: ");
     scanf_s("%d", &noviKlub.godina_osnivanja);
-
+    
+    while ((c = getchar()) != '\n');
     printf("\n Unesite broj osvojenih naslova kluba: ");
     scanf_s("%d", &noviKlub.broj_naslova);
 
@@ -55,9 +63,17 @@ void unosKlub(CelijaNogometniKlub* ppolaznaCelija) {
     novaCelija->element = noviKlub;
     novaCelija->psljedeca = NULL;
 
-    CelijaNogometniKlub* pzadnjaCelija = pronadjiZadnju(ppolaznaCelija);
-    pzadnjaCelija->psljedeca = novaCelija;
+    if (ppolaznaCelija->psljedeca == NULL) {
+        ppolaznaCelija->psljedeca = novaCelija;
+    }
+    else {
+        CelijaNogometniKlub* pzadnjaCelija = pronadjiZadnju(ppolaznaCelija);
+        pzadnjaCelija->psljedeca = novaCelija;
+    }
 }
+
+
+
 
 // Ispis kluba
 void ispisKlub(CelijaNogometniKlub* ppolaznaCelija) {
@@ -91,8 +107,34 @@ void izmjena(Nogometni_klub izmijenjeniElement, CelijaNogometniKlub* pcelijaZaIz
 }
 
 // Brisanje elementa
-void brisanje() {
-    // Implementation of deletion goes here
+void obrisiKlub(CelijaNogometniKlub* ppolaznaCelija) {
+    char imeZaBrisanje[50];
+    printf("\n Unesite ime kluba koji zelite obrisati: ");
+    scanf_s("%49s", imeZaBrisanje, (unsigned)_countof(imeZaBrisanje));
+
+    CelijaNogometniKlub* ptrenutnaCelija = ppolaznaCelija;
+    CelijaNogometniKlub* prethodnaCelija = NULL;
+
+    while (ptrenutnaCelija != NULL && strcmp(ptrenutnaCelija->element.ime, imeZaBrisanje) != 0) {
+        prethodnaCelija = ptrenutnaCelija;
+        ptrenutnaCelija = ptrenutnaCelija->psljedeca;
+    }
+
+    if (ptrenutnaCelija != NULL) {
+        if (prethodnaCelija == NULL) {
+            
+            ppolaznaCelija->psljedeca = ptrenutnaCelija->psljedeca;
+        }
+        else {
+            
+            prethodnaCelija->psljedeca = ptrenutnaCelija->psljedeca;
+        }
+        free(ptrenutnaCelija);
+        printf("\n Klub je uspjesno obrisan.\n");
+    }
+    else {
+        printf("\n Klub s tim imenom nije pronadjen.\n");
+    }
 }
 
 int main() {
@@ -119,7 +161,7 @@ int main() {
             break;
 
         case 4:
-            
+            obrisiKlub(ppolaznaCelija);
             break;
 
         case 5:
@@ -127,6 +169,8 @@ int main() {
             break;
         }
     } while (odabir != 6);
+
+  
 
     return 0;
 }
